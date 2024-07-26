@@ -504,7 +504,7 @@ SSection:NewToggle("PuñoRapido", "", function(state)
                         end
                         if (rapid == true) then
                                 if (inputObject.UserInputType == Enum.UserInputType.MouseButton1) or
-                                    (inputObject.UserInputType == Enum.UserInputType.Touch then) then
+                                    (inputObject.UserInputType == Enum.UserInputType.Touch) then
                                         spawn(function()
                                                 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0, 0.1, 1);
                                                 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0, 0.1, 1);
@@ -537,7 +537,7 @@ SSection:NewToggle("PuñoPesadoRapido", "", function(state)
                         end
                         if (Hrapid == true) then
                                 if (inputObject.UserInputType == Enum.UserInputType.MouseButton1) or
-                                    (inputObject.UserInputType == Enum.UserInputType.Touch then) then
+                                    (inputObject.UserInputType == Enum.UserInputType.Touch) then
                                         spawn(function()
                                         game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4, 0.1, 1);
                                         game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4, 0.1, 1);
@@ -569,7 +569,7 @@ SSection:NewToggle("SuperPuñoRápido", "", function(state)
                         end
                         if (superrapid == true) then
                                 if (inputObject.UserInputType == Enum.UserInputType.MouseButton1) or
-                                    (inputObject.UserInputType == Enum.UserInputType.Touch then) then
+                                    (inputObject.UserInputType == Enum.UserInputType.Touch) then
                                         spawn(function()
                                                 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0, 0.1, 1);
                                                 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0, 0.1, 1);
