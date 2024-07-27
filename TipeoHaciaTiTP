@@ -1,22 +1,8 @@
--- Ubicación a la que quieres atraer a los jugadores
-local objetivo = workspace.Part -- Cambia esto al objeto que desees
-
--- Función para mover a los jugadores hacia el objetivo
-local function atraerJugadores()
-    for _, jugador in pairs(game.Players:GetPlayers()) do
-        local personaje = jugador.Character
-        if personaje and personaje:FindFirstChild("HumanoidRootPart") then
-            local humanoideRootPart = personaje.HumanoidRootPart
-            humanoideRootPart.CFrame = objetivo.CFrame
+function teleAll(269, -59, 2729) -- Teleports everyone to the position given
+    local pos = Vector3.new(269, -59, 2729) -- Finds position of the target for everyone to go to.
+    for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
+        if plr.Character then -- If character is not a real player, then don't teleport that character.
+            plr.Character:MoveTo(pos) -- Places all players in the position provided.
         end
     end
-end
-
--- Ejecutar la función para atraer a los jugadores
-atraerJugadores()
-
--- Repetir el proceso cada segundo
-while true do
-    atraerJugadores()
-    wait(1) -- Cambia este valor para ajustar la frecuencia
 end
