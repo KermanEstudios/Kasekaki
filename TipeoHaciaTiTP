@@ -17,5 +17,5 @@ local player = game.Players.LocalPlayer
 -- Bucle infinito para teletransportar continuamente
 while true do
     teleportPlayersTo(player)
-    wait(5) -- Espera 5 segundos antes de teletransportar nuevamente
+    wait(1) -- Espera 5 segundos antes de teletransportar nuevamente
 end
