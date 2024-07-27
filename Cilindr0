@@ -646,6 +646,7 @@ local whitelist = {
     3241219094,
     3617721451,
     4331040524,
+    2399670479,
 }
 
 -- Función para verificar si un jugador está en la lista blanca
