@@ -3,35 +3,101 @@
 -- Obtener el servicio Workspace
 local workspace = game:GetService("Workspace")
 
+-- Función para eliminar un objeto y sus hijos
+local function safeDestroy(obj)
+    if obj and obj:IsA("Instance") then
+        obj:Destroy()
+    end
+end
+
 -- Eliminar edificios en la ciudad
-if workspace:FindFirstChild("City") and workspace.City:FindFirstChild("Buildings") then
-    workspace.City.Buildings:Destroy()
+local city = workspace:FindFirstChild("City")
+if city then
+    local buildings = city:FindFirstChild("Buildings")
+    if buildings then
+        safeDestroy(buildings)
+        print("Edificios eliminados.")
+    else
+        print("No se encontró el contenedor de edificios.")
+    end
+else
+    print("No se encontró el contenedor City.")
 end
 
 -- Eliminar el banco
-if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Bank") and workspace.City.Interactive.Bank:FindFirstChild("Model") then
-    workspace.City.Interactive.Bank.Model:Destroy()
+local interactive = city and city:FindFirstChild("Interactive")
+if interactive then
+    local bank = interactive:FindFirstChild("Bank")
+    if bank then
+        local model = bank:FindFirstChild("Model")
+        if model then
+            safeDestroy(model)
+            print("Banco eliminado.")
+        else
+            print("No se encontró el modelo del banco.")
+        end
+    else
+        print("No se encontró el contenedor Bank.")
+    end
+else
+    print("No se encontró el contenedor Interactive.")
 end
 
 -- Eliminar una parte específica de la estación de policía
-if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Police Station") and workspace.City.Interactive["Police Station"]:GetChildren()[28] then
-    workspace.City.Interactive["Police Station"]:GetChildren()[28]:Destroy()
+local policeStation = interactive and interactive:FindFirstChild("Police Station")
+if policeStation then
+    local children = policeStation:GetChildren()
+    if #children >= 28 then
+        safeDestroy(children[28])
+        print("Parte específica de la estación de policía eliminada.")
+    else
+        print("No hay suficientes hijos en Police Station.")
+    end
+else
+    print("No se encontró el contenedor Police Station.")
 end
 
 -- Eliminar el almacén en Grove
-if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Grove") and workspace.City.Interactive.Grove:FindFirstChild("WareHouse") then
-    workspace.City.Interactive.Grove.WareHouse:Destroy()
+local grove = interactive and interactive:FindFirstChild("Grove")
+if grove then
+    local wareHouse = grove:FindFirstChild("WareHouse")
+    if wareHouse then
+        safeDestroy(wareHouse)
+        print("Almacén en Grove eliminado.")
+    else
+        print("No se encontró el contenedor WareHouse en Grove.")
+    end
+else
+    print("No se encontró el contenedor Grove.")
 end
 
 -- Eliminar una parte específica de la plaza principal
-if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Main Plaza") and workspace.City.Interactive["Main Plaza"]:GetChildren()[38] then
-    workspace.City.Interactive["Main Plaza"]:GetChildren()[38]:Destroy()
+local mainPlaza = interactive and interactive:FindFirstChild("Main Plaza")
+if mainPlaza then
+    local children = mainPlaza:GetChildren()
+    if #children >= 38 then
+        safeDestroy(children[38])
+        print("Parte específica de Main Plaza eliminada.")
+    else
+        print("No hay suficientes hijos en Main Plaza.")
+    end
+else
+    print("No se encontró el contenedor Main Plaza.")
 end
 
 -- Eliminar barreras en zonas seguras
-if workspace:FindFirstChild("SafeZones") and workspace.SafeZones:FindFirstChild("Barrier") then
-    local barriers = workspace.SafeZones.Barrier:GetChildren()
-    for _, barrier in ipairs(barriers) do
-        barrier:Destroy()
+local safeZones = workspace:FindFirstChild("SafeZones")
+if safeZones then
+    local barriers = safeZones:FindFirstChild("Barrier")
+    if barriers then
+        local barrierChildren = barriers:GetChildren()
+        for _, barrier in ipairs(barrierChildren) do
+            safeDestroy(barrier)
+        end
+        print("Barreras en SafeZones eliminadas.")
+    else
+        print("No se encontró el contenedor Barrier en SafeZones.")
     end
+else
+    print("No se encontró el contenedor SafeZones.")
 end
