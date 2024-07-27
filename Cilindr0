@@ -1,9 +1,9 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "Age of Weirdos",
-    LoadingTitle = "Age of Weirdos",
-    LoadingSubtitle = "DAMN.Jay",
+    Name = "Darkers1",
+    LoadingTitle = "Dark Warriors",
+    LoadingSubtitle = "Darker",
     ConfigurationSaving = {
         Enabled = false,
         FolderName = nil,
