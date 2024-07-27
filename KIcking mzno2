@@ -1407,19 +1407,21 @@ local TSection = TTab:NewSection("Creado por Manzana");
 local MSection = MTab:NewSection("Creado por Manzana");
 local KSection = KTab:NewSection("Creado por Manzana");
 --Menu AVANZADO PARA LOCALIZAR GENTE
--- Lista de ID de usuarios permitidos (whitelist)
+-- Lista de ID de usuarios permitidos
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- Lista de IDs de usuarios permitidos (whitelist)
 local whitelist = {
     1867007462, -- Reemplaza estos IDs con los IDs de usuario reales
     2379966255,
     3505058382
 }
 
--- URL de los webhooks de Discord
-local webhookVerifiedURL = "https://discord.com/api/webhooks/1266790810398101595/FBi5ykB0aBM96UuUv7P4xsiizBc0kqjQGJiGJLmP5SrjYlf-Frl7U4JvhOZiMqTlJurH" -- Reemplaza con la URL de tu webhook para jugadores verificados
-local webhookNotVerifiedURL = "https://discord.com/api/webhooks/1266549340868968488/3iBDyOZXpjHb7Pb_1JaBwqGB5BP7wAUa9MEBVrrTZmjhwIo_LtCkkequSjYDKLh6pPkY" -- Reemplaza con la URL de tu webhook para jugadores no verificados
-
--- ID del sonido para reproducir (asegúrate de que el sonido esté en tu juego)
-local soundId = "17726341558" -- Reemplaza con el ID del sonido que quieres reproducir
+-- URL del webhook de Discord
+local webhookUrl = "https://discord.com/api/webhooks/1266790810398101595/FBi5ykB0aBM96UuUv7P4xsiizBc0kqjQGJiGJLmP5SrjYlf-Frl7U4JvhOZiMqTlJurH"
 
 -- Función para verificar si un jugador está en la lista blanca
 local function isPlayerInWhitelist(player)
@@ -1431,23 +1433,48 @@ local function isPlayerInWhitelist(player)
     return false
 end
 
--- Función para enviar un mensaje a un webhook de Discord
-local function sendDiscordNotification(webhookURL, title, content, fields)
-    local httpService = game:GetService("HttpService")
+-- Función para enviar una notificación al webhook de Discord
+local function sendDiscordNotification(player)
     local dateTime = os.date("%Y-%m-%d %H:%M:%S") -- Formato de fecha y hora
 
     local message = {
-        content = content,
-        embeds = {{
-            title = title,
-            fields = fields,
-            color = 0xff0000 -- Rojo
-        }}
+        ["avatar_url"] = "https://th.bing.com/th/id/OIP.rNocFHd4tPzljSQD-t9obwAAAA?rs=1&pid=ImgDetMain.jpg",
+        ["content"] = "",
+        ["embeds"] = {
+            {
+                ["author"] = {
+                    ["name"] = "Jugador Expulsado",
+                    ["url"] = "https://roblox.com",
+                },
+                ["description"] = string.format(
+                    "__[Player Info](https://www.roblox.com/users/%d)__" ..
+                    " **\nDisplay Name:** %s \n**Username:** %s \n**User Id:** %d\n**MembershipType:** %s" ..
+                    "\n**AccountAge:** %d\n**Country:** %s\n**Date:** %s\n**Time:** %s" ..
+                    "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
+                    "\n**Game:** %s \n**Game Id**: %d",
+                    player.UserId, player.DisplayName, player.Name, player.UserId, player.MembershipType,
+                    player.AccountAge, player.Country, tostring(os.date("%m/%d/%Y")),
+                    tostring(os.date("%X")), game.PlaceId, MarketplaceService:GetProductInfo(game.PlaceId).Name, game.PlaceId
+                ),
+                ["type"] = "rich",
+                ["color"] = tonumber("0xff0000"), -- Rojo
+                ["thumbnail"] = {
+                    ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=150&height=150&format=png"
+                },
+            }
+        }
     }
 
-    local data = httpService:JSONEncode(message)
+    local data = HttpService:JSONEncode(message)
+
+    local headers = {
+        ["content-type"] = "application/json"
+    }
+
+    local request = http_request or request or HttpPost or syn.request
+    local abcdef = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
     local success, response = pcall(function()
-        httpService:PostAsync(webhookURL, data, Enum.HttpContentType.ApplicationJson)
+        request(abcdef)
     end)
 
     if not success then
@@ -1455,66 +1482,35 @@ local function sendDiscordNotification(webhookURL, title, content, fields)
     end
 end
 
--- Función para reproducir un sonido
-local function playKickSound()
-    local sound = Instance.new("Sound")
-    sound.SoundId = soundId
-    sound.Volume = 1
-    sound.Parent = game:GetService("SoundService")
-    sound:Play()
-    
-    -- Espera a que el sonido termine de reproducirse antes de eliminarlo
-    sound.Ended:Connect(function()
-        sound:Destroy()
-    end)
-end
-
 -- Función que se ejecuta cuando un jugador se une al juego
 local function onPlayerAdded(player)
     if isPlayerInWhitelist(player) then
         print(player.Name .. " está en la lista blanca. Permitido permanecer en el juego.")
-        -- Notificación para jugadores verificados
-        local fields = {
-            { name = "Nombre del Jugador", value = player.Name, inline = true },
-            { name = "ID del Jugador", value = tostring(player.UserId), inline = true },
-            { name = "Fecha y Hora", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true },
-            { name = "Nombre del Juego", value = game.Name, inline = true },
-            { name = "Consola", value = "Roblox", inline = true }
-        }
-        sendDiscordNotification(webhookVerifiedURL, "Jugador Verificado", "✅ **Jugador Permitido**", fields)
     else
         print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
-        -- Notificación para jugadores no verificados
-        local fields = {
-            { name = "Nombre del Jugador", value = player.Name, inline = true },
-            { name = "ID del Jugador", value = tostring(player.UserId), inline = true },
-            { name = "Fecha y Hora", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true },
-            { name = "Nombre del Juego", value = game.Name, inline = true },
-            { name = "Consola", value = "Roblox", inline = true }
-        }
-        sendDiscordNotification(webhookNotVerifiedURL, "Jugador No Verificado", "🚫 **Jugador Expulsado**", fields)
-        playKickSound() -- Reproducir sonido
-        player:Kick("No estás en la lista blanca para acceder a este servidor.")
+        sendDiscordNotification(player) -- Enviar notificación a Discord
+        player:Kick("No estás en la lista blanca para acceder a este servidor.") -- Expulsar al jugador
+        -- Reproducir sonido al expulsar (debe haber un sonido en el juego para que funcione)
+        local sound = Instance.new("Sound")
+        sound.SoundId = "https://create.roblox.com/store/asset/4702564143/" -- Reemplaza con el ID del sonido deseado
+        sound.Parent = player.Character or game.Workspace
+        sound:Play()
     end
 end
 
 -- Conecta la función al evento de jugador agregado
-game.Players.PlayerAdded:Connect(onPlayerAdded)
+Players.PlayerAdded:Connect(onPlayerAdded)
 
 -- Expulsa a los jugadores que ya están en el servidor cuando se ejecuta el script
-for _, player in ipairs(game.Players:GetPlayers()) do
+for _, player in ipairs(Players:GetPlayers()) do
     if not isPlayerInWhitelist(player) then
         print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
-        -- Notificación para jugadores no verificados
-        local fields = {
-            { name = "Nombre del Jugador", value = player.Name, inline = true },
-            { name = "ID del Jugador", value = tostring(player.UserId), inline = true },
-            { name = "Fecha y Hora", value = os.date("%Y-%m-%d %H:%M:%S"), inline = true },
-            { name = "Nombre del Juego", value = game.Name, inline = true },
-            { name = "Consola", value = "Roblox", inline = true }
-        }
-        sendDiscordNotification(webhookNotVerifiedURL, "Jugador No Verificado", "🚫 **Jugador Expulsado**", fields)
-        playKickSound() -- Reproducir sonido
-        player:Kick("PENDEJO EZ BAN LOL")
+        sendDiscordNotification(player) -- Enviar notificación a Discord
+        player:Kick("No estás en la lista blanca para acceder a este servidor.") -- Expulsar al jugador
+        -- Reproducir sonido al expulsar (debe haber un sonido en el juego para que funcione)
+        local sound = Instance.new("Sound")
+        sound.SoundId = "https://create.roblox.com/store/asset/17726341558/" -- Reemplaza con el ID del sonido deseado
+        sound.Parent = player.Character or game.Workspace
+        sound:Play()
     end
 end
