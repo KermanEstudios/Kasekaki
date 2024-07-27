@@ -1,21 +1,25 @@
--- Función para teletransportar a todos los jugadores a la posición del jugador especificado
-local function teleportPlayersTo(player)
-    local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position
-    
-    if playerPosition then
-        for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- Verifica que el jugador y su personaje están disponibles
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    local playerPosition = player.Character.HumanoidRootPart.Position
+
+    local function bringAllPlayersToMe(position)
+        local players = Players:GetPlayers()
+        
+        for _, otherPlayer in pairs(players) do
             if otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                otherPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(playerPosition)
+                otherPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(position)
             end
         end
     end
-end
 
--- Obtener el jugador que ejecuta el script
-local player = game.Players.LocalPlayer
-
--- Bucle infinito para teletransportar continuamente
-while true do
-    teleportPlayersTo(player)
-    wait(1) -- Espera 5 segundos antes de teletransportar nuevamente
+    -- Bucle infinito para mover a todos los jugadores a la posición del jugador cada 5 segundos
+    while true do
+        bringAllPlayersToMe(playerPosition)
+        wait(5) -- Espera 5 segundos antes de ejecutar de nuevo
+    end
+else
+    warn("El jugador no tiene un HumanoidRootPart.")
 end
