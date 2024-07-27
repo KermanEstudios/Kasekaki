@@ -1,8 +1,24 @@
-function teleAll(269, -59, 2729) -- Teleports everyone to the position given
-    local pos = Vector3.new(269, -59, 2729) -- Finds position of the target for everyone to go to.
-    for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
-        if plr.Character then -- If character is not a real player, then don't teleport that character.
-            plr.Character:MoveTo(pos) -- Places all players in the position provided.
+-- Definir la posición a la que quieres teletransportar a los jugadores
+local destination = Vector3.new(269, -59, 2729)  -- Cambia estos valores a las coordenadas deseadas
+
+-- Intervalo de tiempo en segundos (ejemplo: cada 30 segundos)
+local interval = 2
+
+-- Función para teletransportar a todos los jugadores
+local function teleportPlayers()
+    -- Iterar a través de todos los jugadores en el juego
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        -- Asegurarse de que el jugador tenga un personaje y un humano
+        local character = player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            -- Teletransportar al jugador a la posición deseada
+            character.HumanoidRootPart.CFrame = CFrame.new(destination)
         end
     end
+end
+
+-- Bucle infinito para teletransportar a los jugadores cada intervalo de tiempo
+while true do
+    teleportPlayers()
+    wait(interval)  -- Espera el intervalo de tiempo antes de volver a teletransportar
 end
