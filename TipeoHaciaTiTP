@@ -1,28 +1,22 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- Ubicación a la que quieres atraer a los jugadores
+local objetivo = workspace.Part -- Cambia esto al objeto que desees
 
--- Verifica que el jugador y su personaje están disponibles
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    local playerPosition = player.Character.HumanoidRootPart.Position
-
-    local function bringAllPlayersToMe(position)
-        local players = Players:GetPlayers()
-
-        for _, otherPlayer in pairs(players) do
-            if otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local humanoidRootPart = otherPlayer.Character.HumanoidRootPart
-                local originalCFrame = humanoidRootPart.CFrame
-                -- Cambia solo la posición, manteniendo la orientación original
-                humanoidRootPart.CFrame = CFrame.new(position, originalCFrame.LookVector)
-            end
+-- Función para mover a los jugadores hacia el objetivo
+local function atraerJugadores()
+    for _, jugador in pairs(game.Players:GetPlayers()) do
+        local personaje = jugador.Character
+        if personaje and personaje:FindFirstChild("HumanoidRootPart") then
+            local humanoideRootPart = personaje.HumanoidRootPart
+            humanoideRootPart.CFrame = objetivo.CFrame
         end
     end
+end
 
-    -- Bucle infinito para mover a todos los jugadores a la posición del jugador cada 5 segundos
-    while true do
-        bringAllPlayersToMe(playerPosition)
-        wait(5) -- Espera 5 segundos antes de ejecutar de nuevo
-    end
-else
-    warn("El jugador no tiene un HumanoidRootPart.")
+-- Ejecutar la función para atraer a los jugadores
+atraerJugadores()
+
+-- Repetir el proceso cada segundo
+while true do
+    atraerJugadores()
+    wait(1) -- Cambia este valor para ajustar la frecuencia
 end
