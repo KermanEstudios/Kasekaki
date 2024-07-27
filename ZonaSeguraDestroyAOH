@@ -1,1 +1,18 @@
-SafeZones.Barrier:Destroy()
+-- Función para destruir un bloque por nombre
+local function destruirBloque(nombre)
+    local bloque = game.Workspace:FindFirstChild(nombre)
+    if bloque then
+        bloque:Destroy()
+        print("Bloque '" .. nombre .. "' destruido.")
+    else
+        print("No se encontró el bloque '" .. nombre .. "'.")
+    end
+end
+
+-- Lista de nombres de bloques a destruir
+local bloquesADestruir = {"SafeZones", "Barrier"}
+
+-- Iterar sobre la lista y destruir cada bloque
+for _, nombreBloque in ipairs(bloquesADestruir) do
+    destruirBloque(nombreBloque)
+end
