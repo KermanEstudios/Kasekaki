@@ -1,0 +1,8 @@
+-- Suponiendo que el bloque que quieres destruir está en Workspace
+local bloque = workspace:FindFirstChild("SafeZones.Barrier") -- Cambia "NombreDelBloque" por el nombre del bloque que deseas destruir
+
+if bloque then
+    bloque:Destroy()
+else
+    print("El bloque no fue encontrado.")
+end
