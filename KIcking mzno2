@@ -1411,7 +1411,6 @@ local KSection = KTab:NewSection("Creado por Manzana");
 local whitelist = {
     1867007462, -- Reemplaza estos IDs con los IDs de usuario reales
     2379966255,
-    4104964554,
     3505058382
 }
 
