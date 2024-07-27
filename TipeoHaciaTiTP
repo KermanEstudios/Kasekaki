@@ -1,37 +1,24 @@
--- Obtener el servicio Workspace y Players
-local players = game:GetService("Players")
-local teams = game:GetService("Teams")
+-- Variables
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
--- La parte de referencia en el mapa a la que se teletransportarán los jugadores
-local referencePart = workspace:FindFirstChild("TeleportReferencePart")  -- Nombre del Part de referencia
-
--- Verifica que la parte de referencia exista
-if not referencePart then
-    error("No se encontró la parte de referencia 'TeleportReferencePart' en el Workspace.")
-end
-
--- Función para teletransportar jugadores en un equipo específico
-local function teleportPlayersInTeam(teamName)
-    local team = teams:FindFirstChild(teamName)
-    if not team then
-        warn("No se encontró el equipo: " .. teamName)
-        return
-    end
-
-    for _, player in pairs(players:GetPlayers()) do
-        if player.Team == team then
-            local character = player.Character
-            if character and character:FindFirstChild("HumanoidRootPart") then
-                -- Teletransportar al jugador a la posición de referencia
-                character.HumanoidRootPart.CFrame = referencePart.CFrame
-            end
-        end
+-- Function to teleport to a player
+local function teleportToPlayer(player)
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
     end
 end
 
--- Bucle infinito para teletransportar jugadores continuamente
-while true do
-    teleportPlayersInTeam("Heroes")
-    teleportPlayersInTeam("Villains")
-    wait(2)  -- Esperar antes de la siguiente teletransportación (ajusta el tiempo según sea necesario)
+-- Loop through all players once
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        -- Print player name
+        print("Teleporting to: " .. player.Name)
+        -- Teleport to the player
+        teleportToPlayer(player)
+        -- Delay to avoid script errors and give time for the teleport
+        wait(0.1)
+    end
 end
+
+print("Teleportation script executed successfully.")
