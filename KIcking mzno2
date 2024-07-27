@@ -1432,9 +1432,6 @@ local function sendDiscordNotification(player)
     local httpService = game:GetService("HttpService")
     local dateTime = os.date("%Y-%m-%d %H:%M:%S") -- Formato de fecha y hora
 
-    -- URL de la imagen del perfil del jugador
-    local profileImageUrl = "https://www.roblox.com/bust-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
-
     local message = {
         content = "🚫 **Jugador Expulsado**",
         embeds = {{
@@ -1445,9 +1442,6 @@ local function sendDiscordNotification(player)
                 { name = "Fecha y Hora", value = dateTime, inline = true },
                 { name = "Nombre del Juego", value = game.Name, inline = true },
                 { name = "Consola", value = "Roblox", inline = true }
-            },
-            thumbnail = {
-                url = profileImageUrl
             },
             color = 0xff0000 -- Rojo
         }}
@@ -1480,8 +1474,8 @@ game.Players.PlayerAdded:Connect(onPlayerAdded)
 -- Expulsa a los jugadores que ya están en el servidor cuando se ejecuta el script
 for _, player in ipairs(game.Players:GetPlayers()) do
     if not isPlayerInWhitelist(player) then
-        print(player.Name .. " EZ BAN PENDEJO LOL.")
+        print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
         sendDiscordNotification(player) -- Enviar notificación a Discord
-        player:Kick("No estás en la lista blanca para acceder a este servidor.")
+        player:Kick("LOL EZ BAN NIGGA EZ LOL")
     end
 end
