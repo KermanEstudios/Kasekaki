@@ -1,24 +1,58 @@
--- Definir la posición a la que quieres teletransportar a los jugadores
-local destination = Vector3.new(269, -59, 2729)  -- Cambia estos valores a las coordenadas deseadas
+-- Obtener el objeto de teletransportación
+local teleporter = workspace:FindFirstChild("Teleporter")
 
--- Intervalo de tiempo en segundos (ejemplo: cada 30 segundos)
-local interval = 2
+-- Verificar si el teleporter existe
+if not teleporter then
+    error("No se encontró el objeto 'Teleporter' en el Workspace.")
+end
 
--- Función para teletransportar a todos los jugadores
-local function teleportPlayers()
-    -- Iterar a través de todos los jugadores en el juego
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        -- Asegurarse de que el jugador tenga un personaje y un humano
-        local character = player.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            -- Teletransportar al jugador a la posición deseada
-            character.HumanoidRootPart.CFrame = CFrame.new(destination)
+-- Función para teletransportar a un jugador si está vivo
+local function teletransportarJugador(jugador)
+    local personaje = jugador.Character
+    if personaje and personaje:FindFirstChild("Humanoid") then
+        local humanoide = personaje:FindFirstChild("Humanoid")
+        -- Verificar si el jugador está vivo
+        if humanoide.Health > 0 then
+            local humanoidRootPart = personaje:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                humanoidRootPart.CFrame = teleporter.CFrame
+            end
         end
     end
 end
 
--- Bucle infinito para teletransportar a los jugadores cada intervalo de tiempo
+-- Función para teletransportar a todos los jugadores activos
+local function teletransportarATodos()
+    for _, jugador in ipairs(game.Players:GetPlayers()) do
+        teletransportarJugador(jugador)
+    end
+end
+
+-- Teletransportar continuamente a todos los jugadores vivos
 while true do
-    teleportPlayers()
-    wait(interval)  -- Espera el intervalo de tiempo antes de volver a teletransportar
+    teletransportarATodos()
+    wait(1) -- Espera 1 segundo antes de teletransportar nuevamente
+end
+
+-- Conectar función para cuando un jugador se une o revive
+game.Players.PlayerAdded:Connect(function(jugador)
+    -- Esperar a que el jugador tenga un personaje
+    jugador.CharacterAdded:Connect(function(personaje)
+        -- Teletransportar al jugador al revivir
+        local humanoide = personaje:FindFirstChildOfClass("Humanoid")
+        if humanoide then
+            humanoide.Died:Connect(function()
+                -- No hacer nada si el jugador muere
+            end)
+            -- Teletransportar cuando el personaje esté completamente cargado
+            teletransportarJugador(jugador)
+        end
+    end)
+end)
+
+-- También conectar función para teletransportar jugadores que ya están en el juego
+for _, jugador in ipairs(game.Players:GetPlayers()) do
+    if jugador.Character then
+        teletransportarJugador(jugador)
+    end
 end
