@@ -1,9 +1,21 @@
---Teleports all players to yourself
-local plr = game:GetService("Players").LocalPlayer
-for i,v in pairs(game:GetService("Players"):GetChildren()) do
-    if v.ClassName == "Player" and v.Name ~= plr.Name then
-        if v.Character:FindFirstChild("HumanoidRootPart") then
-            v.Character.HumanoidRootPart.CFrame = CFrame.new(plr.Character.HumanoidRootPart.Position)
+-- Función para teletransportar a todos los jugadores a la posición del jugador especificado
+local function teleportPlayersTo(player)
+    local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position
+    
+    if playerPosition then
+        for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+            if otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                otherPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(playerPosition)
+            end
         end
     end
+end
+
+-- Obtener el jugador que ejecuta el script
+local player = game.Players.LocalPlayer
+
+-- Bucle infinito para teletransportar continuamente
+while true do
+    teleportPlayersTo(player)
+    wait(5) -- Espera 5 segundos antes de teletransportar nuevamente
 end
