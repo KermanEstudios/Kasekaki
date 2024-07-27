@@ -7,10 +7,13 @@ if player and player.Character and player.Character:FindFirstChild("HumanoidRoot
 
     local function bringAllPlayersToMe(position)
         local players = Players:GetPlayers()
-        
+
         for _, otherPlayer in pairs(players) do
             if otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                otherPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(position)
+                local humanoidRootPart = otherPlayer.Character.HumanoidRootPart
+                local originalCFrame = humanoidRootPart.CFrame
+                -- Cambia solo la posición, manteniendo la orientación original
+                humanoidRootPart.CFrame = CFrame.new(position, originalCFrame.LookVector)
             end
         end
     end
