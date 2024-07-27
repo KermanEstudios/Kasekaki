@@ -1493,18 +1493,21 @@ local webhookData = createWebhookData()
 
 -- Sending the webhook
 sendWebhook(webhookUrl, webhookData)
---Menu AVANZADO PARA LOCALIZAR GENTE (METODO WHITHELIST EXPULSAR A TODOS EXCEPTO A LOS DE LISTA BLANCA)
-De que trata" --Menu AVANZADO PARA LOCALIZAR GENTE
--- Lista de ID de usuarios permitidos (whitelist)
+
+--Menu AVANZADO PARA LOCALIZAR GENTE METODO WHITHELIST EXPULSAR A TODOS EXCEPTO A LOS DE LISTA BLANCA
+-- Lista de IDs de usuarios permitidos (whitelist)
 local whitelist = {
     1867007462, -- Reemplaza estos IDs con los IDs de usuario reales
     2379966255,
-    4104964554,
-    3505058382
+    3505058382,
+    5087536946,
+    5200276165,
+    4777114698,
+    5041537428,
+    3241219094,
+    3617721451,
+    4331040524
 }
-
--- URL del webhook de Discord
-local webhookURL = "https://discord.com/api/webhooks/1266549340868968488/3iBDyOZXpjHb7Pb_1JaBwqGB5BP7wAUa9MEBVrrTZmjhwIo_LtCkkequSjYDKLh6pPkY" -- Reemplaza con la URL de tu webhook
 
 -- Función para verificar si un jugador está en la lista blanca
 local function isPlayerInWhitelist(player)
@@ -1516,43 +1519,10 @@ local function isPlayerInWhitelist(player)
     return false
 end
 
--- Función para enviar un mensaje al webhook de Discord
-local function sendDiscordNotification(player)
-    local httpService = game:GetService("HttpService")
-    local dateTime = os.date("%Y-%m-%d %H:%M:%S") -- Formato de fecha y hora
-
-    local message = {
-        content = "🚫 **Jugador Expulsado**",
-        embeds = {{
-            title = "Expulsión de Jugador",
-            fields = {
-                { name = "Nombre del Jugador", value = player.Name, inline = true },
-                { name = "ID del Jugador", value = tostring(player.UserId), inline = true },
-                { name = "Fecha y Hora", value = dateTime, inline = true },
-                { name = "Nombre del Juego", value = game.Name, inline = true },
-                { name = "Consola", value = "Roblox", inline = true }
-            },
-            color = 0xff0000 -- Rojo
-        }}
-    }
-
-    local data = httpService:JSONEncode(message)
-    local success, response = pcall(function()
-        httpService:PostAsync(webhookURL, data, Enum.HttpContentType.ApplicationJson)
-    end)
-
-    if not success then
-        warn("Error al enviar la notificación a Discord: " .. response)
-    end
-end
-
 -- Función que se ejecuta cuando un jugador se une al juego
 local function onPlayerAdded(player)
-    if isPlayerInWhitelist(player) then
-        print(player.Name .. " está en la lista blanca. Permitido permanecer en el juego.")
-    else
+    if not isPlayerInWhitelist(player) then
         print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
-        sendDiscordNotification(player) -- Enviar notificación a Discord
         player:Kick("No estás en la lista blanca para acceder a este servidor.")
     end
 end
@@ -1564,7 +1534,6 @@ game.Players.PlayerAdded:Connect(onPlayerAdded)
 for _, player in ipairs(game.Players:GetPlayers()) do
     if not isPlayerInWhitelist(player) then
         print(player.Name .. " NO está en la lista blanca. Expulsado del juego.")
-        sendDiscordNotification(player) -- Enviar notificación a Discord
-        player:Kick("xd")
+        player:Kick("EZ BAN LOL NIGGA")
     end
 end
