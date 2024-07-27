@@ -1,29 +1,9 @@
--- Script Local
-
-local Players = game:GetService("Players")
-
--- Función para teletransportar a todos los jugadores hacia el jugador local
-local function teleportAllPlayersTo(player)
-    -- Obtener la posición del jugador que ejecuta el script
-    local targetPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position
-    if not targetPosition then
-        warn("El jugador no tiene una posición válida.")
-        return
-    end
-
-    -- Teletransportar a todos los jugadores a la posición del jugador objetivo
-    for _, p in ipairs(Players:GetPlayers()) do
-        if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-            p.Character.HumanoidRootPart.CFrame = CFrame.new(targetPosition)
+--Teleports all players to yourself
+local plr = game:GetService("Players").LocalPlayer
+for i,v in pairs(game:GetService("Players"):GetChildren()) do
+    if v.ClassName == "Player" and v.Name ~= plr.Name then
+        if v.Character:FindFirstChild("HumanoidRootPart") then
+            v.Character.HumanoidRootPart.CFrame = CFrame.new(plr.Character.HumanoidRootPart.Position)
         end
     end
-end
-
--- Obtén al jugador local
-local player = Players.LocalPlayer
-
-if player then
-    teleportAllPlayersTo(player)
-else
-    warn("No se pudo obtener el jugador local.")
 end
