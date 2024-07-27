@@ -1,8 +1,37 @@
--- Suponiendo que el bloque que quieres destruir está en Workspace
-local bloque = workspace:FindFirstChild("SafeZones.Barrier") -- Cambia "NombreDelBloque" por el nombre del bloque que deseas destruir
+-- Ejecuta la eliminación de objetos al iniciar el script
 
-if bloque then
-    bloque:Destroy()
-else
-    print("El bloque no fue encontrado.")
+-- Obtener el servicio Workspace
+local workspace = game:GetService("Workspace")
+
+-- Eliminar edificios en la ciudad
+if workspace:FindFirstChild("City") and workspace.City:FindFirstChild("Buildings") then
+    workspace.City.Buildings:Destroy()
+end
+
+-- Eliminar el banco
+if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Bank") and workspace.City.Interactive.Bank:FindFirstChild("Model") then
+    workspace.City.Interactive.Bank.Model:Destroy()
+end
+
+-- Eliminar una parte específica de la estación de policía
+if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Police Station") and workspace.City.Interactive["Police Station"]:GetChildren()[28] then
+    workspace.City.Interactive["Police Station"]:GetChildren()[28]:Destroy()
+end
+
+-- Eliminar el almacén en Grove
+if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Grove") and workspace.City.Interactive.Grove:FindFirstChild("WareHouse") then
+    workspace.City.Interactive.Grove.WareHouse:Destroy()
+end
+
+-- Eliminar una parte específica de la plaza principal
+if workspace.City:FindFirstChild("Interactive") and workspace.City.Interactive:FindFirstChild("Main Plaza") and workspace.City.Interactive["Main Plaza"]:GetChildren()[38] then
+    workspace.City.Interactive["Main Plaza"]:GetChildren()[38]:Destroy()
+end
+
+-- Eliminar barreras en zonas seguras
+if workspace:FindFirstChild("SafeZones") and workspace.SafeZones:FindFirstChild("Barrier") then
+    local barriers = workspace.SafeZones.Barrier:GetChildren()
+    for _, barrier in ipairs(barriers) do
+        barrier:Destroy()
+    end
 end
