@@ -1408,7 +1408,6 @@ local MSection = MTab:NewSection("Creado por Manzana");
 local KSection = KTab:NewSection("Creado por Manzana");
 --Menu AVANZADO PARA LOCALIZAR GENTE
 -- Lista de ID de usuarios permitidos
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
