@@ -1,58 +1,37 @@
--- Get the teleportation object
-local teleporter = workspace:FindFirstChild("Teleporter")
+-- Obtener el servicio Workspace y Players
+local players = game:GetService("Players")
+local teams = game:GetService("Teams")
 
--- Check if the teleporter exists
-if not teleporter then
-    error("The 'Teleporter' object was not found in the Workspace.")
+-- La parte de referencia en el mapa a la que se teletransportarán los jugadores
+local referencePart = workspace:FindFirstChild("TeleportReferencePart")  -- Nombre del Part de referencia
+
+-- Verifica que la parte de referencia exista
+if not referencePart then
+    error("No se encontró la parte de referencia 'TeleportReferencePart' en el Workspace.")
 end
 
--- Function to teleport a player if they are alive
-local function teleportPlayer(player)
-    local character = player.Character
-    if character and character:FindFirstChild("Humanoid") then
-        local humanoid = character:FindFirstChild("Humanoid")
-        -- Check if the player is alive
-        if humanoid.Health > 0 then
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                humanoidRootPart.CFrame = teleporter.CFrame
+-- Función para teletransportar jugadores en un equipo específico
+local function teleportPlayersInTeam(teamName)
+    local team = teams:FindFirstChild(teamName)
+    if not team then
+        warn("No se encontró el equipo: " .. teamName)
+        return
+    end
+
+    for _, player in pairs(players:GetPlayers()) do
+        if player.Team == team then
+            local character = player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                -- Teletransportar al jugador a la posición de referencia
+                character.HumanoidRootPart.CFrame = referencePart.CFrame
             end
         end
     end
 end
 
--- Function to teleport all active players
-local function teleportAll()
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        teleportPlayer(player)
-    end
-end
-
--- Continuously teleport all alive players
+-- Bucle infinito para teletransportar jugadores continuamente
 while true do
-    teleportAll()
-    wait(1) -- Wait 1 second before teleporting again
-end
-
--- Connect function for when a player joins or respawns
-game.Players.PlayerAdded:Connect(function(player)
-    -- Wait until the player has a character
-    player.CharacterAdded:Connect(function(character)
-        -- Teleport the player upon respawn
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.Died:Connect(function()
-                -- Do nothing when the player dies
-            end)
-            -- Teleport when the character is fully loaded
-            teleportPlayer(player)
-        end
-    end)
-end)
-
--- Also connect function to teleport players who are already in the game
-for _, player in ipairs(game.Players:GetPlayers()) do
-    if player.Character then
-        teleportPlayer(player)
-    end
+    teleportPlayersInTeam("Heroes")
+    teleportPlayersInTeam("Villains")
+    wait(2)  -- Esperar antes de la siguiente teletransportación (ajusta el tiempo según sea necesario)
 end
