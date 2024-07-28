@@ -1,15 +1,34 @@
 -- Configura la variable global para controlar el bucle principal
 getgenv().loopgoto = true;
 
--- Espera a que el personaje del jugador esté disponible
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+-- Obtén el servicio de jugadores
+local playersService = game:GetService("Players")
+
+-- Función para obtener el personaje y el HumanoidRootPart del jugador
+local function getCharacterAndRootPart(player)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    return character, humanoidRootPart
+end
+
+-- Obtén el jugador local y su personaje inicial
+local player = playersService.LocalPlayer
+local character, humanoidRootPart = getCharacterAndRootPart(player)
+
+-- Actualiza las referencias cuando el personaje respawnea
+player.CharacterAdded:Connect(function(newCharacter)
+    character, humanoidRootPart = getCharacterAndRootPart(player)
+end)
 
 -- Función para teletransportar al jugador a un jugador aleatorio
 local function teleportToRandomPlayer()
+    -- Verifica que el HumanoidRootPart esté disponible
+    if not humanoidRootPart or not humanoidRootPart.Parent or humanoidRootPart.Parent ~= character then
+        return
+    end
+
     -- Obtén la lista de jugadores en el juego
-    local players = game:GetService("Players"):GetPlayers()
+    local players = playersService:GetPlayers()
 
     -- Filtra la lista para excluir al jugador actual y jugadores sin personajes
     local validPlayers = {}
