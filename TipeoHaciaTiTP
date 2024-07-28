@@ -1,42 +1,36 @@
--- Get the Players service
-local Players = game:GetService("Players")
+-- Configura la variable global para controlar el bucle principal
+getgenv().loopgoto = true;
 
--- Function to teleport a player to a random player
-local function teleportToRandomPlayer(player)
-    -- Get a list of all players in the game
-    local allPlayers = Players:GetPlayers()
-    
-    -- Filter out the current player from the list
-    local otherPlayers = {}
-    for _, p in pairs(allPlayers) do
-        if p ~= player then
-            table.insert(otherPlayers, p)
+-- Espera a que el personaje del jugador esté disponible
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Función para teletransportar al jugador a un jugador aleatorio
+local function teleportToRandomPlayer()
+    -- Obtén la lista de jugadores en el juego
+    local players = game:GetService("Players"):GetPlayers()
+
+    -- Filtra la lista para excluir al jugador actual y jugadores sin personajes
+    local validPlayers = {}
+    for _, p in ipairs(players) do
+        if p ~= player and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+            table.insert(validPlayers, p)
         end
     end
-    
-    -- Ensure there are other players available for teleportation
-    if #otherPlayers > 0 then
-        -- Choose a random player from the filtered list
-        local randomPlayer = otherPlayers[math.random(#otherPlayers)]
-        
-        -- Get the position of the random player
-        local randomPlayerPosition = randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") and randomPlayer.Character.HumanoidRootPart.Position
-        
-        -- Teleport the current player to the random player's position
-        if randomPlayerPosition then
-            player.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(randomPlayerPosition)
-        end
+
+    -- Verifica si hay jugadores válidos para teletransportar
+    if #validPlayers > 0 then
+        -- Elige un jugador aleatorio
+        local targetPlayer = validPlayers[math.random(1, #validPlayers)]
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+        -- Teletransporta al jugador al objetivo con un pequeño desplazamiento
+        humanoidRootPart.CFrame = CFrame.new(targetPosition) * CFrame.new(0, 0, 3)
     end
 end
 
--- Teleport all players every 10 seconds
-while true do
-    -- Iterate through all players in the game
-    for _, player in pairs(Players:GetPlayers()) do
-        -- Teleport the player to another random player
-        teleportToRandomPlayer(player)
-    end
-    
-    -- Wait 10 seconds before repeating
-    wait(5)
+-- Ejecuta el bucle principal para teletransportar al jugador a un jugador aleatorio
+while getgenv().loopgoto do
+    task.wait(2)  -- Espera 2 segundos entre teletransportes
+    spawn(teleportToRandomPlayer)  -- Llama a la función de teletransporte en paralelo
 end
