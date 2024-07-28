@@ -38,5 +38,5 @@ while true do
     end
     
     -- Wait 10 seconds before repeating
-    wait(10)
+    wait(5)
 end
