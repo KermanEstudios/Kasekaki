@@ -1,24 +1,42 @@
--- Variables
+-- Get the Players service
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 
--- Function to teleport to a player
-local function teleportToPlayer(player)
-    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+-- Function to teleport a player to a random player
+local function teleportToRandomPlayer(player)
+    -- Get a list of all players in the game
+    local allPlayers = Players:GetPlayers()
+    
+    -- Filter out the current player from the list
+    local otherPlayers = {}
+    for _, p in pairs(allPlayers) do
+        if p ~= player then
+            table.insert(otherPlayers, p)
+        end
+    end
+    
+    -- Ensure there are other players available for teleportation
+    if #otherPlayers > 0 then
+        -- Choose a random player from the filtered list
+        local randomPlayer = otherPlayers[math.random(#otherPlayers)]
+        
+        -- Get the position of the random player
+        local randomPlayerPosition = randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") and randomPlayer.Character.HumanoidRootPart.Position
+        
+        -- Teleport the current player to the random player's position
+        if randomPlayerPosition then
+            player.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(randomPlayerPosition)
+        end
     end
 end
 
--- Loop through all players once
-for _, player in pairs(Players:GetPlayers()) do
-    if player ~= LocalPlayer then
-        -- Print player name
-        print("Teleporting to: " .. player.Name)
-        -- Teleport to the player
-        teleportToPlayer(player)
-        -- Delay to avoid script errors and give time for the teleport
-        wait(0.1)
+-- Teleport all players every 10 seconds
+while true do
+    -- Iterate through all players in the game
+    for _, player in pairs(Players:GetPlayers()) do
+        -- Teleport the player to another random player
+        teleportToRandomPlayer(player)
     end
+    
+    -- Wait 10 seconds before repeating
+    wait(10)
 end
-
-print("Teleportation script executed successfully.")
