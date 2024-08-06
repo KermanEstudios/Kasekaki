@@ -1,4 +1,4 @@
--- This Script İs Cracked By TuVieja
+-- This Script Ä°s Cracked By Tu Vieja
 -- Nebulon Source
  do
  _G.AOH = false;
@@ -8,7 +8,7 @@ if (_G.AOH == true) then
  else 
 local VLibrary=loadstring(game:HttpGet("https://raw.githubusercontent.com/Sigma-3131/Scripts/main/VepX%20U%C4%B0%20Lib"))();
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Sigma-3131/Scripts/main/Sigma%20Key"))();
-MAINTTL = "gg/f2bPqTm5u3";
+MAINTTL = ".gg/FACXNPqrER";
 
 LocalPlayer=game.Players.LocalPlayer;
 _G.AOH = true;
@@ -1604,28 +1604,12 @@ end
 end);
 
 Self:Toggle("Heavy Punch",function(t)
-if state then 
-getgenv().Hrapid = true;
-local UserInputService=game:GetService("UserInputService");
-local function onInputEnded(inputObject,gameProcessedEvent)
- if gameProcessedEvent then
- return;
-end 
-if (t == true) then
- if (inputObject.UserInputType == Enum.UserInputType.Touch) then 
-game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
-game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
-game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
+ if (t == true) then
+ _G.Punchval = 0.4;
+else
+ _G.Punchval = 0.1;
 end
- end 
-end 
-UserInputService.InputEnded:Connect(onInputEnded);
-else 
-spawn(function() 
-getgenv().Hrapid = false;
-end);
-end 
-end);
+ end);
 
 Self:Toggle("Heavy Rapid Punch",function(state) 
 if state then 
@@ -1636,7 +1620,7 @@ local function onInputEnded(inputObject,gameProcessedEvent)
  return;
 end 
 if (Hrapid == true) then
- if (inputObject.UserInputType == Enum.UserInputType.Touch) then 
+ if (inputObject.UserInputType ==mEnum.UserInputType.MouseButton1) then 
 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
 game:GetService("ReplicatedStorage").Events.Punch:FireServer(0.4,0.1,1);
@@ -1668,7 +1652,7 @@ if (t == true) then
 getgenv().rapid = true;
 local function onInputEnded(inputObject,gameProcessedEvent) 
 if gameProcessedEvent then return;end if (rapid == true) then 
-if (inputObject.UserInputType == Enum.UserInputType.Touch) then 
+if (inputObject.UserInputType == Enum.UserInputType.MouseButton1) then 
 pcall(function() 
 for i = 1,_G.Rapidvalue do 
 game:GetService("ReplicatedStorage").Events.Punch:FireServer(_G.Punchval,0.1,1);
@@ -2717,13 +2701,13 @@ end end if (_G.bring == true) then
 end 
 end);
 
-Farms:Label(".gg/f2bPqTm5u3");
-Target:Label(".gg/f2bPqTm5u3");
-Self:Label(".gg/f2bPqTm5u3");
-Teleport:Label(".gg/f2bPqTm5u3");
-Keybinds:Label(".gg/f2bPqTm5u3");
-Misc:Label(".gg/f2bPqTm5u3");
-cred:Label(".gg/f2bPqTm5u3");
+Farms:Label(".gg/FACXNPqrER");
+Target:Label(".gg/FACXNPqrER");
+Self:Label(".gg/FACXNPqrER");
+Teleport:Label(".gg/FACXNPqrER");
+Keybinds:Label(".gg/FACXNPqrER");
+Misc:Label(".gg/FACXNPqrER");
+cred:Label(".gg/FACXNPqrER");
 end 
 end 
 end);
